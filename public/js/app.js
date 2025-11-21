@@ -29,6 +29,7 @@ document.getElementById("transaction-form").addEventListener("submit", function(
     
     getCashIn();
     getCashOut();
+    getTotal();
 
     alert("Transação adicionada com sucesso.");
 });
@@ -160,7 +161,6 @@ function getTotal() {
 
     document.getElementById("total").innerHTML = `R$ ${total.toFixed(2)}`;
 }
-
 
 function saveData(data) {
     localStorage.setItem(data.login, JSON.stringify(data));
