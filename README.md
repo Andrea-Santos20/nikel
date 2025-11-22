@@ -1,6 +1,6 @@
 # Nikel - Controle Financeiro
 
-Um projeto simples de controle financeiro para registrar **entradas** e **saídas**, visualizando valores, descrições, datas.
+Um projeto simples de controle financeiro para registrar **entradas** e **saídas**, visualizando valores, descrições e datas.
 
 ## 📌 Funcionalidades
 ✔️ Cadastro de entradas  
