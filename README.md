@@ -7,7 +7,6 @@ Um projeto simples de controle financeiro para registrar **entradas** e **saída
 ✔️ Cadastro de saídas  
 ✔️ Listagem dinâmica por tipo (entrada / saída)  
 ✔️ Atualização automática do saldo total  
-✔️ Edição e exclusão de transações  
 ✔️ Layout responsivo  
 
 ## 🛠️ Tecnologias Utilizadas
