@@ -110,3 +110,7 @@ font-size: 18px;
     margin-right: 10px;
     
 }
+
+.gap-3 {
+    gap: 35px !important;
+}
