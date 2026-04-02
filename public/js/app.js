@@ -128,29 +128,18 @@ function getCashIn() {
         let limit = cashIn.length > 5 ? 5 : cashIn.length;
 
         for (let i = 0; i < limit; i++) {
-            cashInHtml += `
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h3 class=""fs-12>R$ ${cashIn[i].value}</h3>
-                    <div class="container p-0">
-                        <div class="row align-items-center">
-
-                            <div class="col-8 d-flex justify-content-between">
-                                <p class="m-0">${cashIn[i].description}</p>
-                                <span>${formatDate(cashIn[i].date)}</span>
-                            </div>
-
-                            <div class="col-4 d-flex justify-content-end">
-                                <button class="btn btn-sm btn-outline-primary" onclick="editTransaction(${cashIn[i].index})">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTransaction(${cashIn[i].index})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
+           cashInHtml += `
+           <div class="mb-3" id="row-${cashIn[i].id}">
+                <h3 class="fs-6 fw-bold mb-0">R$ ${cashIn[i].value}</h3>
+                <div class="d-flex align-items-center mt-1" style="gap:0">
+                    <span class="text-muted small" style="width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${cashIn[i].description}</span>                    
+                    <span class="text-muted small" style="width:110px">${formatDate(cashIn[i].date)}</span>
+                    <button class="btn btn-sm btn-outline-primary p-0 px-1 ms-1" onclick="editTransaction(${cashIn[i].id}, '${cashIn[i].description}', ${cashIn[i].value}, '${cashIn[i].date}', ${cashIn[i].type})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger p-0 px-1 ms-1" onclick="deleteTransaction(${cashIn[i].id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
             `;
@@ -172,32 +161,24 @@ function getCashOut() {
         let limit = cashOut.length > 5 ? 5 : cashOut.length;
 
         for (let i = 0; i < limit; i++) {
+
             cashOutHtml += `
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h3 class=""fs-12>R$ ${cashOut[i].value}</h3>
-                    <div class="container p-0">
-                        <div class="row align-items-center">
-                            
-                            <div class="col-8 d-flex justify-content-between">
-                                <p class="m-0">${cashOut[i].description}</p>
-                                <span>${formatDate(cashOut[i].date)}</span>
-                            </div>
-
-                            <div class="col-4 d-flex justify-content-end">
-                                <button class="btn btn-sm btn-outline-primary" onclick="editTransaction(${cashOut[i].index})">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTransaction(${cashOut[i].index})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
+            <div class="mb-3" id="row-${cashOut[i].id}">
+                <h3 class="fs-6 fw-bold mb-0">R$ ${cashOut[i].value}</h3>
+                <div class="d-flex align-items-center mt-1" style="gap:0">
+                    <span class="text-muted small" style="width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${cashOut[i].description}</span>
+                    
+                    <span class="text-muted small" style="width:110px">${formatDate(cashOut[i].date)}</span>
+                    <button class="btn btn-sm btn-outline-primary p-0 px-1 ms-1" onclick="editTransaction(${cashOut[i].id}, '${cashOut[i].description}', ${cashOut[i].value}, '${cashOut[i].date}', ${cashOut[i].type})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger p-0 px-1 ms-1" onclick="deleteTransaction(${cashOut[i].id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
             `;
+           
         }
 
         document.getElementById("cash-out-list").innerHTML = cashOutHtml;
@@ -230,5 +211,71 @@ function formatDate(dateString) {
         month: '2-digit',
         year: 'numeric',
         timeZone: 'UTC' // evita deslocamento de fuso horário
+    });
+}
+
+function editTransaction(id, description, value, date, type) {
+    // Busca a linha na tela
+    const row = document.getElementById(`row-${id}`);
+
+    // Formata a data para o input (YYYY-MM-DD)
+    const dateFormatted = date.split('T')[0];
+
+    // Substitui o conteúdo da linha por campos editáveis
+    row.innerHTML = `
+        <div class="col-12 d-flex justify-content-between align-items-center gap-2">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <input type="number" class="form-control form-control-sm" id="edit-value-${id}" value="${value}" style="width:90px">
+                <input type="text" class="form-control form-control-sm" id="edit-desc-${id}" value="${description}" style="width:140px">
+                <input type="date" class="form-control form-control-sm" id="edit-date-${id}" value="${dateFormatted}" style="width:140px">
+                <select class="form-select form-select-sm" id="edit-type-${id}" style="width:100px">
+                    <option value="1" ${type == 1 ? 'selected' : ''}>Entrada</option>
+                    <option value="2" ${type == 2 ? 'selected' : ''}>Saída</option>
+                </select>
+            </div>
+            <div class="d-flex gap-1">
+                <button class="btn btn-sm btn-success" onclick="saveTransaction(${id})">
+                    <i class="bi bi-check-lg"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="getTransactions()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function saveTransaction(id) {
+    const value = document.getElementById(`edit-value-${id}`).value;
+    const description = document.getElementById(`edit-desc-${id}`).value;
+    const date = document.getElementById(`edit-date-${id}`).value;
+    const type = document.getElementById(`edit-type-${id}`).value;
+
+    axios.put(`http://localhost:3333/transactions/${id}`,
+        { value: Number(value), description, date, type: Number(type) },
+        { headers: userHeader() }
+    )
+    .then(function(response) {
+        alert(response.data.msg);
+        getTransactions(); // recarrega a lista
+    })
+    .catch(function(error) {
+        alert(error.response.data.msg);
+    });
+}
+
+function deleteTransaction(id) {
+    if (!confirm("Tem certeza que deseja excluir este lançamento?")) return;
+
+    axios.delete(`http://localhost:3333/transactions/${id}`,
+        { headers: userHeader() }
+    )
+    .then(function(response) {
+        alert(response.data.msg);
+        getTransactions(); // recarrega a lista
+    })
+    .catch(function(error) {
+        const msg = error?.response?.data?.msg || "Erro inesperado. Tente novamente.";
+        alert(msg);
     });
 }
